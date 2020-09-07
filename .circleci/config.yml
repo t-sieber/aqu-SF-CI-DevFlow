@@ -49,7 +49,6 @@ workflows:
            branches:
              only:
                - /feature*/
-         name: Shall Feature be deployed instantly?
       - validate_partial: # << the job to conditionally run based on the filter-by-branch-name.
           requires:
             - request_deployment
@@ -63,7 +62,7 @@ workflows:
             branches:
               only:
                 - master
-          name: Validate Partial from Master branch       
+          name: Validate Partial from Master branch
   partial_run:
     jobs:
       - validate_prod: # << the job to conditionally run based on the filter-by-branch-name.
