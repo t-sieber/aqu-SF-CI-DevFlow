@@ -12,7 +12,7 @@ jobs:
             sfdx force:project:create -n "TempDeploy";
             cd "TempDeploy";
             sfdx force:source:deploy -u "${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BRANCH}" -p "../src" -l RunLocalTests -w 33 --loglevel info;
-          name: Creating SFDX Project and deploying sources to Partial Environment SB.
+          name: Creating SFDX Project and deploying sources to Partial Environment.
   validate_partial_w_Approval:
     executor: salesforce-sfdx/default
     steps:
@@ -21,13 +21,11 @@ jobs:
       - salesforce-sfdx/auth:
           defaultusername: ${SFDX_USERNAME_PARTIAL}
           consumerKey: SFDX_CONSUMER_KEY_PARTIAL
-      - request-deploying:
+      - request-deployment:
           type: approval
-          requires:
-            - salesforce-sfdx/auth
       - run:
           requires:
-            - request-deploying
+            - request-deployment
           command: >
             sfdx force:project:create -n "TempDeploy";
             cd "TempDeploy";
