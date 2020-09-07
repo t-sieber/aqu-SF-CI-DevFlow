@@ -1,0 +1,83 @@
+jobs:
+  validate_partial_wo_Approval:
+    executor: salesforce-sfdx/default
+    steps:
+      - checkout
+      - salesforce-sfdx/install
+      - salesforce-sfdx/auth:
+          defaultusername: ${SFDX_USERNAME_PARTIAL}
+          consumerKey: SFDX_CONSUMER_KEY_PARTIAL
+      - run:
+          command: >
+            sfdx force:project:create -n "TempDeploy";
+            cd "TempDeploy";
+            sfdx force:source:deploy -u "${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BRANCH}" -p "../src" -l RunLocalTests -w 33 --loglevel info;
+          name: Creating SFDX Project and deploying sources to Partial Environment SB.
+  validate_partial_w_Approval:
+    executor: salesforce-sfdx/default
+    steps:
+      - checkout
+      - salesforce-sfdx/install
+      - salesforce-sfdx/auth:
+          defaultusername: ${SFDX_USERNAME_PARTIAL}
+          consumerKey: SFDX_CONSUMER_KEY_PARTIAL
+      - request-deploying:
+          type: approval
+          requires:
+            - salesforce-sfdx/auth
+      - run:
+          requires:
+            - request-deploying
+          command: >
+            sfdx force:project:create -n "TempDeploy";
+            cd "TempDeploy";
+            sfdx force:source:deploy -u "${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BRANCH}" -p "../src" -l RunLocalTests -w 33 --loglevel info;
+          name: Creating SFDX Project and deploying sources to Partial Environment SB.
+  validate_prod:
+    executor: salesforce-sfdx/default
+    steps:
+     - checkout
+     - salesforce-sfdx/install
+     - salesforce-sfdx/auth:
+          defaultusername: ${SFDX_USERNAME_PROD}
+          consumerKey: SFDX_CONSUMER_KEY_PROD
+     - run:
+         command: >
+           sfdx force:project:create -n "TempDeploy";
+           cd "TempDeploy";
+           sfdx force:source:deploy -u "${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BRANCH}" -p "../src" -c -l RunLocalTests -w 33 --loglevel info;
+         name: Creating SFDX Project and deploying sources to Partial Environment
+orbs:
+  salesforce-sfdx: circleci/salesforce-sfdx@2.1.0
+version: 2.1
+workflows:
+  hotfix_run:
+    jobs:
+      - validate_partial: # << the job to conditionally run based on the filter-by-branch-name.
+          filters:
+            branches:
+              only: hotfix
+      - validate_prod: # << the job to conditionally run based on the filter-by-branch-name.
+          filters:
+            branches:
+              only: hotfix
+  feature_run:
+    jobs:
+      - validate_partial_w_Approval: # << the job to conditionally run based on the filter-by-branch-name.
+          filters:
+            branches:
+              only:
+                - /feature*/
+  development_run:
+    jobs:
+      - validate_partial_wo_Approval: # << the job to conditionally run based on the filter-by-branch-name.
+          filters:
+            branches:
+              only:
+                - /feature*/
+  partial_run:
+    jobs:
+      - validate_prod: # << the job to conditionally run based on the filter-by-branch-name.
+          filters:
+            branches:
+              only: partial
