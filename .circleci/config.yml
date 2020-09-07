@@ -21,11 +21,11 @@ jobs:
       - salesforce-sfdx/auth:
           defaultusername: ${SFDX_USERNAME_PARTIAL}
           consumerKey: SFDX_CONSUMER_KEY_PARTIAL
-      - request-deployment:
+      - request_deployment:
           type: approval
       - run:
           requires:
-            - request-deployment
+            - request_deployment
           command: >
             sfdx force:project:create -n "TempDeploy";
             cd "TempDeploy";
@@ -72,7 +72,7 @@ workflows:
           filters:
             branches:
               only:
-                - /feature*/
+                - master
   partial_run:
     jobs:
       - validate_prod: # << the job to conditionally run based on the filter-by-branch-name.
