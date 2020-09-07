@@ -53,7 +53,7 @@ version: 2.1
 workflows:
   hotfix_run:
     jobs:
-      - validate_partial: # << the job to conditionally run based on the filter-by-branch-name.
+      - validate_partial_wo_Approval: # << the job to conditionally run based on the filter-by-branch-name.
           filters:
             branches:
               only: hotfix
