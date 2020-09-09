@@ -36,11 +36,11 @@ workflows:
       - validate_partial: # << the job to conditionally run based on the filter-by-branch-name.
           filters:
             branches:
-              only: hotfix
+              only: hotfix*
       - validate_prod: # << the job to conditionally run based on the filter-by-branch-name.
           filters:
             branches:
-              only: hotfix
+              only: hotfix*
   development_run:
     jobs:
       - request_deployment:
