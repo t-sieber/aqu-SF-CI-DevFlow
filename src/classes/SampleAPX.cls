@@ -1,7 +1,6 @@
 public class SampleAPX {
     public static void greet() {
-        System.debug('Hej User!' + UserInfo.getFirstName());
-
+        System.debug('Well, Hello there: ' + UserInfo.getFirstName());
         
     }
 }
