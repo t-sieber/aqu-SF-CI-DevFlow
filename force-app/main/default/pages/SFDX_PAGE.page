@@ -1,3 +1,0 @@
-<apex:page renderAs="PDF" applyBodyTag="false" applyHtmlTag="false" showHeader="false" standardStylesheets="false" cache="false">
-	HELLO! I'M AN AWESOME SFDX PAGE!
-</apex:page>
