@@ -7,11 +7,10 @@ jobs:
       - salesforce-sfdx/auth:
           defaultusername: ${SFDX_USERNAME_PARTIAL}
           consumerKey: SFDX_CONSUMER_KEY_PARTIAL
+          instanceUrl: https://test.salesforce.com
       - run:
           command: >
-            sfdx force:project:create -n "TempDeploy";
-            cd "TempDeploy";
-            sfdx force:source:deploy -u "${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BRANCH}" -p "../src" -l RunLocalTests -w 33 --loglevel info;
+            sfdx force:source:deploy -u "${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BRANCH}" -m "ApexClass, ApexPage, ApexComponent, ApexTrigger, AuraDefinitionBundle, LightningComponentBundle"  -l RunLocalTests -w 33 --loglevel info;
           name: Creating SFDX Project and deploying sources to Partial Environment.
   validate_prod:
     executor: salesforce-sfdx/default
@@ -21,11 +20,10 @@ jobs:
      - salesforce-sfdx/auth:
           defaultusername: ${SFDX_USERNAME_PROD}
           consumerKey: SFDX_CONSUMER_KEY_PROD
+          instanceUrl: https://login.salesforce.com
      - run:
          command: >
-           sfdx force:project:create -n "TempDeploy";
-           cd "TempDeploy";
-           sfdx force:source:deploy -u "${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BRANCH}" -p "../src" -l RunLocalTests -w 33 --loglevel info;
+           sfdx force:source:deploy -u "${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BRANCH}" -m "ApexClass, ApexPage, ApexComponent, ApexTrigger, AuraDefinitionBundle, LightningComponentBundle"  -l RunLocalTests -w 33 --loglevel info;
          name: Creating SFDX Project and deploying sources to Production Environment
 orbs:
   salesforce-sfdx: circleci/salesforce-sfdx@2.1.0
@@ -41,22 +39,8 @@ workflows:
           filters:
             branches:
               only: /^hotfix.*/
-  development_run:
+  Development_run:
     jobs:
-      - request_deployment:
-         type: approval
-         filters:
-           branches:
-             only:
-               - /feature*/
-      - validate_partial: # << the job to conditionally run based on the filter-by-branch-name.
-          requires:
-            - request_deployment
-          filters:
-            branches:
-              only:
-                - /feature*/
-          name: Validate Partial from Feature Branch
       - validate_partial: # << the job to conditionally run based on the filter-by-branch-name.
           filters:
             branches:
