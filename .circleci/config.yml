@@ -25,10 +25,11 @@ jobs:
          command: >
            sfdx force:source:deploy -u "${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BRANCH}" -m "ApexClass, ApexPage, ApexComponent, ApexTrigger, AuraDefinitionBundle, LightningComponentBundle"  -l RunLocalTests -w 33 --loglevel info;
            mkdir /tmp/artifacts;
-           sfdx force:apex:test:run -u "${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BRANCH}" -c -r json  > /tmp/artifacts/testrun.json;
+           mkdir tmp/test-results/;
+           sfdx force:apex:test:run -u "${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BRANCH}" -c -r junit  > /tmp/test-results/testrun.xml;
          name: Creating SFDX Project and deploying sources to Production Environment
-     - store_artifacts:
-        path: /tmp/artifacts
+     - store_test_results:
+        path: /tmp/test-results
 orbs:
   salesforce-sfdx: circleci/salesforce-sfdx@2.2.0
 version: 2.1
