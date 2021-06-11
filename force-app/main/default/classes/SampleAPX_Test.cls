@@ -5,4 +5,9 @@ private class SampleAPX_Test {
 	private static void test_Greeting() {
 		SampleAPX.greet();
 	}
+
+	@isTest
+	private static void test_Error() {
+		SampleAPX.letsHaveAnullpointer();
+	}
 }

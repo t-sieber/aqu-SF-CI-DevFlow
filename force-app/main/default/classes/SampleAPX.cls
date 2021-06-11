@@ -3,4 +3,11 @@ public class SampleAPX {
         System.debug('Well, Hello there: ' + UserInfo.getFirstName());
         
     }
+
+    public static void letsHaveAnullpointer() {
+        String well;
+        String npe = well.substring(5);
+
+        
+    }
 }
