@@ -26,7 +26,7 @@ jobs:
            mkdir /tmp/test-results/;
            mkdir /tmp/artifacts;
            sfdx force:apex:test:run -u "${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BRANCH}" -c -r junit > /tmp/test-results/testrun_beforeDeployment.xml || true;
-           sfdx force:apex:log:get -u "${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BRANCH}"  > /tmp/artifacts/testrundebug.log
+           sfdx force:apex:log:get -u "${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BRANCH}"  > /tmp/artifacts/testrundebug.log;
            sfdx force:source:deploy -u "${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BRANCH}" -m "ApexClass, ApexPage, ApexComponent, ApexTrigger, AuraDefinitionBundle, LightningComponentBundle"  -l RunLocalTests -w 33 --loglevel info;
          name: Creating SFDX Project and deploying sources to Production Environment
      - store_test_results:
